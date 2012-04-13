@@ -24,13 +24,13 @@ public class RemoteEventAndroidService extends Service {
                 Intent intent = new Intent(RemoteEventAndroidService.this, KeyCaptureActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                stopped = false;
             }
             try {
                 while (pendingEvents.isEmpty() && !stopped) {
                     wait();
                 }
                 if (stopped) {
-                    stopSelf();
                     return null;
                 }
                 List<RemoteEvent> result = pendingEvents;

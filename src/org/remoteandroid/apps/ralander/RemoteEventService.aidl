@@ -2,6 +2,6 @@ package org.remoteandroid.apps.ralander;
 
 interface RemoteEventService {
 
-    List getEvents(boolean start);
+    List getEvents(boolean first);
 
 }
