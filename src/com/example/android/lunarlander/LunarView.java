@@ -16,6 +16,8 @@
 
 package com.example.android.lunarlander;
 
+import org.remoteandroid.apps.ralander.R;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;

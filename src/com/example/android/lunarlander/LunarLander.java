@@ -16,6 +16,8 @@
 
 package com.example.android.lunarlander;
 
+import org.remoteandroid.apps.ralander.R;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
