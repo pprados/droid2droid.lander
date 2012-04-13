@@ -61,7 +61,7 @@ public class RemoteAndroidController {
         @Override
         public void unbind(RemoteAndroidManager manager) {
             remoteAndroidManager = null;
-            // disconnected(); //TODO ???
+            disconnected();
         }
     };
 
@@ -88,13 +88,14 @@ public class RemoteAndroidController {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             remoteAndroid = (RemoteAndroid) service;
-            Intent intent = new Intent("org.remoteandroid.apps.ralander.REMOTE_EVENT_SERVICE");
+            Intent intent = new Intent(RalanderActions.REMOTE_EVENT_SERVICE);
             remoteAndroid.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             remoteAndroid = null;
+            disconnected();
         }
 
     };

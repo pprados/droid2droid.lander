@@ -19,7 +19,9 @@ public class WaitForClientActivity extends Activity {
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName name) {}
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
 
     };
 

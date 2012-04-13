@@ -19,6 +19,10 @@ public class RemoteEvent implements Parcelable {
     public long getTimestamp() {
         return timestamp;
     }
+    
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public KeyEvent getKeyEvent() {
         return keyEvent;
