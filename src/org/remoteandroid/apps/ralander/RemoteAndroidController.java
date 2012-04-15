@@ -9,6 +9,7 @@ import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.RemoteAndroidManager.ManagerListener;
 import org.remoteandroid.internal.RemoteAndroidInfoImpl;
+import org.remoteandroid.poc.RA;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -29,59 +30,59 @@ public class RemoteAndroidController {
 
     private boolean onlyOnceHack;
 
-    private ManagerListener managerListener = new ManagerListener() {
-        @Override
-        public void bind(RemoteAndroidManager manager) {
-            if (onlyOnceHack)
-                return;
-            remoteAndroidManager = manager;
-            // remoteAndroidManager.newDiscoveredAndroid(discoverController);
-            // MOCK
-            final Handler handler = new Handler();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {}
-                    final RemoteAndroidInfoImpl remoteAndroidInfo = new RemoteAndroidInfoImpl();
-                    remoteAndroidInfo.addUris("ip://192.168.1.122");
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            onlyOnceHack = true;
-                            discoverController.onDiscover(remoteAndroidInfo, false);
-                        }
-                    });
-
-                }
-            }).start();
-        }
-
-        @Override
-        public void unbind(RemoteAndroidManager manager) {
-            remoteAndroidManager = null;
-            disconnected();
-        }
-    };
-
-    private DiscoverListener discoverController = new DiscoverListener() {
-
-        @Override
-        public void onDiscover(RemoteAndroidInfo remoteAndroidInfo, boolean update) {
-            // TODO unregister once logged
-            String uri = remoteAndroidInfo.getUris()[0];
-            Intent intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uri));
-            remoteAndroidManager.bindRemoteAndroid(intent, remoteAndroidConnection, 0);
-        }
-
-        @Override
-        public void onDiscoverStart() {}
-
-        @Override
-        public void onDiscoverStop() {}
-
-    };
+//    private ManagerListener managerListener = new ManagerListener() {
+//        @Override
+//        public void bind(RemoteAndroidManager manager) {
+//            if (onlyOnceHack)
+//                return;
+//            remoteAndroidManager = manager;
+//            // remoteAndroidManager.newDiscoveredAndroid(discoverController);
+//            // MOCK
+//            final Handler handler = new Handler();
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        Thread.sleep(5000);
+//                    } catch (InterruptedException e) {}
+//                    final RemoteAndroidInfoImpl remoteAndroidInfo = new RemoteAndroidInfoImpl();
+//                    remoteAndroidInfo.addUris("ip://192.168.0.100");
+//                    handler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            onlyOnceHack = true;
+//                            discoverController.onDiscover(remoteAndroidInfo, false);
+//                        }
+//                    });
+//
+//                }
+//            }).start();
+//        }
+//
+//        @Override
+//        public void unbind(RemoteAndroidManager manager) {
+//            remoteAndroidManager = null;
+//            disconnected();
+//        }
+//    };
+//
+//    private DiscoverListener discoverController = new DiscoverListener() {
+//
+//        @Override
+//        public void onDiscover(RemoteAndroidInfo remoteAndroidInfo, boolean update) {
+//            // TODO unregister once logged
+//            String uri = remoteAndroidInfo.getUris()[0];
+//            Intent intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uri));
+//            remoteAndroidManager.bindRemoteAndroid(intent, remoteAndroidConnection, 0);
+//        }
+//
+//        @Override
+//        public void onDiscoverStart() {}
+//
+//        @Override
+//        public void onDiscoverStop() {}
+//
+//    };
 
     private ServiceConnection remoteAndroidConnection = new ServiceConnection() {
 
@@ -121,13 +122,18 @@ public class RemoteAndroidController {
     private List<ServiceConnection> connections = new ArrayList<ServiceConnection>();
 
     private Context context;
+    private RemoteAndroidManager manager;
 
     public RemoteAndroidController(Context context) {
         this.context = context;
+        manager = RA.createManager(context);
     }
 
     public void open() {
-        RemoteAndroidManager.bindManager(context, managerListener);
+        // RemoteAndroidManager.bindManager(context, managerListener);
+        String uri = "ip://192.168.0.102";
+        Intent intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uri));
+        manager.bindRemoteAndroid(intent, remoteAndroidConnection, 0);
     }
 
     public void close() {
