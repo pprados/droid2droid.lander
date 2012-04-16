@@ -3,12 +3,8 @@ package org.remoteandroid.apps.ralander;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
 import org.remoteandroid.RemoteAndroid;
-import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
-import org.remoteandroid.RemoteAndroidManager.ManagerListener;
-import org.remoteandroid.internal.RemoteAndroidInfoImpl;
 import org.remoteandroid.poc.RA;
 
 import android.content.ComponentName;
@@ -16,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.IBinder;
 
 public class RemoteAndroidController {
@@ -101,6 +96,7 @@ public class RemoteAndroidController {
                     "Trying to unbind a serviceConnection which was not bound");
         }
         connections.remove(serviceConnection);
+        serviceConnection.onServiceDisconnected(componentName);
     }
 
     private void connected() {
