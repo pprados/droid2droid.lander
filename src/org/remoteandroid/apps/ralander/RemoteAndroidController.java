@@ -27,13 +27,9 @@ public class RemoteAndroidController {
     private RemoteAndroidManager remoteAndroidManager;
     private RemoteAndroid remoteAndroid;
 
-    private boolean onlyOnceHack;
-
     private ManagerListener managerListener = new ManagerListener() {
         @Override
         public void bind(RemoteAndroidManager manager) {
-            if (onlyOnceHack)
-                return;
             remoteAndroidManager = manager;
             // remoteAndroidManager.newDiscoveredAndroid(discoverController);
             // MOCK
@@ -42,14 +38,13 @@ public class RemoteAndroidController {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(3000);
                     } catch (InterruptedException e) {}
                     final RemoteAndroidInfoImpl remoteAndroidInfo = new RemoteAndroidInfoImpl();
                     remoteAndroidInfo.addUris("ip://192.168.1.122");
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            onlyOnceHack = true;
                             discoverController.onDiscover(remoteAndroidInfo, false);
                         }
                     });
@@ -153,6 +148,7 @@ public class RemoteAndroidController {
                     "Trying to unbind a serviceConnection which was not bound");
         }
         connections.remove(serviceConnection);
+        serviceConnection.onServiceDisconnected(componentName);
     }
 
     private void connected() {

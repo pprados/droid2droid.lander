@@ -7,57 +7,107 @@ import java.util.concurrent.BlockingQueue;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
-import android.view.KeyEvent;
 
 public class RemoteEventReceiver {
 
-    public interface EventListener {
-        void eventReceived(RemoteEvent event);
+    public interface RemoteEventListener {
+        void onRemoteEvent(RemoteEvent remoteEvent);
 
-        void stoppedByClient();
+        void onStoppedByClient();
     }
 
-    private final BlockingQueue<RemoteEvent> queue = new ArrayBlockingQueue<RemoteEvent>(16, true);
+    private BlockingQueue<RemoteEvent> eventQueue;
+
     private RemoteEventService remoteService;
+    private RemoteEventListener listener;
     private Handler handler;
+
     private boolean started;
-    private boolean canceled;
-    private EventListener eventListener;
-    
-    public RemoteEventReceiver(RemoteEventService remoteService, Handler handler, EventListener eventListener) {
+    private boolean stoppedByClient;
+
+    private RemoteReceiver remoteReceiver;
+    private RemoteEventPlayer remoteEventPlayer;
+
+    public RemoteEventReceiver(RemoteEventService remoteService, RemoteEventListener listener,
+            Handler handler) {
         this.remoteService = remoteService;
+        this.listener = listener;
         this.handler = handler;
-        this.eventListener = eventListener;
     }
-    
+
     public synchronized void start() {
-        if (!started) {
+        if (!isStarted() && !stoppedByClient) {
             started = true;
-            new Thread(new Receiver()).start();
-            new Thread(new Dispatcher()).start();
+
+            eventQueue = new ArrayBlockingQueue<RemoteEvent>(16, true);
+
+            remoteReceiver = new RemoteReceiver();
+            remoteEventPlayer = new RemoteEventPlayer();
+
+            remoteReceiver.start();
+            remoteEventPlayer.start();
         }
     }
 
-    public synchronized void cancel() {
-        canceled = true;
+    public synchronized void stop() {
+        if (isStarted()) {
+            started = false;
+
+            remoteReceiver.interrupt();
+            remoteEventPlayer.interrupt();
+
+            remoteReceiver = null;
+            remoteEventPlayer = null;
+
+            eventQueue = null;
+        }
     }
 
-    public synchronized boolean isCanceled() {
-        return canceled;
+    public synchronized boolean isStarted() {
+        return started;
     }
 
-    private class Receiver implements Runnable {
+    private synchronized void stopByClient() {
+        stop();
+        this.stoppedByClient = true;
+        dispatchStoppedByClient();
+    }
+
+    public synchronized boolean isStoppedByClient() {
+        return stoppedByClient;
+    }
+
+    protected void dispatchRemoteEvent(final RemoteEvent remoteEvent) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                listener.onRemoteEvent(remoteEvent);
+            }
+        });
+    }
+
+    protected void dispatchStoppedByClient() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                listener.onStoppedByClient();
+            }
+        });
+    }
+
+    // public RemoteEvent nextEvent() throws InterruptedException {
+    // return queue.take();
+    // }
+
+    private class RemoteReceiver extends Thread {
 
         @Override
         public void run() {
-            while (!isCanceled()) {
+            boolean first = true;
+            while (!isInterrupted()) {
                 try {
-                    boolean first = true;
                     @SuppressWarnings("unchecked")
                     List<RemoteEvent> events = (List<RemoteEvent>) remoteService.getEvents(first);
-                    if (isCanceled()) {
-                        return;
-                    }
                     first = false;
                     if (events != null) {
                         if (events.isEmpty()) {
@@ -73,50 +123,47 @@ public class RemoteEventReceiver {
                         long now = System.currentTimeMillis();
                         long delta = now - remoteTimestamp;
                         event.setTimestamp(now);
-                        queue.put(event);
+                        eventQueue.put(event);
                         for (int i = 1; i < events.size(); i++) {
                             event = events.get(i);
                             event.setTimestamp(event.getTimestamp() + delta);
-                            queue.put(event);
+                            eventQueue.put(event);
                         }
                     } else {
-                        cancel();
-                        return;
+                        stopByClient();
                     }
                 } catch (RemoteException e) {
                     Log.e(getClass().getName(), e.getMessage(), e);
                 } catch (InterruptedException e) {
-                    // should never happen
+                    // terminate the thread
                 }
             }
         }
     }
-    
-    private class Dispatcher implements Runnable {
-        
+
+    private class RemoteEventPlayer extends Thread {
+
         @Override
         public void run() {
             try {
-                while (!isCanceled()) {
-                    final RemoteEvent remoteEvent = queue.take();
-                    if (isCanceled()) {
+                while (!isInterrupted()) {
+                    final RemoteEvent remoteEvent = eventQueue.take();
+
+                    if (isInterrupted()) {
                         return;
                     }
+
                     // Events are ordered (naturally, by timestamp)
                     long now = System.currentTimeMillis();
                     long eventTimestamp = remoteEvent.getTimestamp();
                     if (eventTimestamp > now) {
                         Thread.sleep(eventTimestamp - now);
                     }
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            eventListener.eventReceived(remoteEvent);
-                        }
-                    });
+
+                    dispatchRemoteEvent(remoteEvent);
                 }
             } catch (InterruptedException e) {
-                // should never happen
+                // terminate the thread
             }
         }
     }
