@@ -1,6 +1,9 @@
 package org.remoteandroid.apps.ralander;
 
-import org.remoteandroid.apps.ralander.RemoteEventReceiver.RemoteEventListener;
+import org.remoteandroid.control.RemoteEvent;
+import org.remoteandroid.control.RemoteEventReceiver;
+import org.remoteandroid.control.RemoteEventReceiver.RemoteEventListener;
+import org.remoteandroid.control.RemoteEventService;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
@@ -9,6 +12,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.android.lunarlander.LunarLander;
 
@@ -47,12 +51,13 @@ public class RemoteLunarLanderActivity extends LunarLander {
 
         @Override
         public void onStoppedByClient() {
+            Toast.makeText(RemoteLunarLanderActivity.this, "Client disconnected", Toast.LENGTH_SHORT).show();
             finish();
         }
 
         @Override
         public void onRemoteEvent(RemoteEvent remoteEvent) {
-            KeyEvent event = remoteEvent.getKeyEvent();
+            KeyEvent event = (KeyEvent) remoteEvent.getEvent();
             int keyCode = event.getKeyCode();
             switch (event.getAction()) {
             case KeyEvent.ACTION_DOWN:

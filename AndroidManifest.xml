@@ -44,7 +44,7 @@
         <activity android:name=".KeyCaptureActivity" />
         <activity android:name=".RemoteLunarLanderActivity" />
 
-        <service android:name=".RemoteEventAndroidService">
+        <service android:name=".RemoteControlService">
             <intent-filter>
                 <action android:name="org.remoteandroid.apps.ralander.REMOTE_EVENT_SERVICE" />
             </intent-filter>
