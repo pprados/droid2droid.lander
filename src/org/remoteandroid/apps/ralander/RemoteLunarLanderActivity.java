@@ -1,12 +1,8 @@
 package org.remoteandroid.apps.ralander;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-
 import org.remoteandroid.apps.ralander.RemoteEventReceiver.RemoteEventListener;
 
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,7 +39,6 @@ public class RemoteLunarLanderActivity extends LunarLander {
                     remoteEventReceiver = null;
                 }
             }
-            finish();
         }
 
     };
