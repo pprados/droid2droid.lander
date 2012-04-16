@@ -6,10 +6,14 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.View;
+import android.widget.Button;
 
 public class WaitForClientActivity extends Activity {
 
     private RemoteAndroidController remoteAndroidController;
+
+    private Button button;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -33,18 +37,25 @@ public class WaitForClientActivity extends Activity {
 
         remoteAndroidController = ((RalanderApplication) getApplication())
                 .getRemoteAndroidController();
+
+        button = (Button) findViewById(R.id.button);
+    }
+
+    public void onClick(View v) {
+        remoteAndroidController.bindRemoteService(serviceConnection);
+        button.setEnabled(false);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        remoteAndroidController.bindRemoteService(serviceConnection);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         remoteAndroidController.unbindRemoteService(serviceConnection);
+        button.setEnabled(true);
     }
 
 }
