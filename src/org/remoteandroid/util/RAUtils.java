@@ -31,11 +31,6 @@ public class RAUtils {
                 in.close();
             }
         }
-        // Bitmap scaBitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, false);
-        // bitmap.recycle();
-        // mQrCode.setImageBitmap(scaBitmap);
-        // mQrCode.getImageMatrix().setScale(0.3f, 0.3f);
-        // mQrCode.invalidate();
     }
 
     public static Bitmap createQRCodeScaledBitmap(Context context, int size) throws IOException {
