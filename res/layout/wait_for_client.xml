@@ -12,10 +12,18 @@
         android:onClick="onClick"
         android:text="Connect" />
 
-    <!-- TextView
+    <!--
+         TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Waiting for remote client" /-->
+        android:text="Waiting for remote client" /
+    -->
+
+    <ImageView
+        android:id="@+id/qrCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="QRCode" />
 
 </LinearLayout>

@@ -3,8 +3,11 @@ package org.remoteandroid.apps.ralander;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
 import org.remoteandroid.RemoteAndroid;
+import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
+import org.remoteandroid.RemoteAndroidManager.ManagerListener;
 import org.remoteandroid.poc.RA;
 
 import android.content.ComponentName;
@@ -22,6 +25,40 @@ public class RemoteAndroidController {
 
     private RemoteAndroidManager remoteAndroidManager;
     private RemoteAndroid remoteAndroid;
+
+    private ManagerListener managerListener = new ManagerListener() {
+
+        @Override
+        public void bind(RemoteAndroidManager remoteAndroidManager) {
+            RemoteAndroidController.this.remoteAndroidManager = remoteAndroidManager;
+            remoteAndroidManager.newDiscoveredAndroid(discoverListener);
+//            String uri = "ip://192.168.1.122";
+//            Intent intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uri));
+//            remoteAndroidManager.bindRemoteAndroid(intent, remoteAndroidConnection, 0);
+        }
+
+        @Override
+        public void unbind(RemoteAndroidManager remoteAndroidManager) {
+            RemoteAndroidController.this.remoteAndroidManager = null;
+        }
+
+    };
+
+    private DiscoverListener discoverListener = new DiscoverListener() {
+
+        @Override
+        public void onDiscoverStop() {}
+
+        @Override
+        public void onDiscoverStart() {}
+
+        @Override
+        public void onDiscover(RemoteAndroidInfo remoteAndroidInfo, boolean update) {
+            String uri = remoteAndroidInfo.getUris()[0];
+            Intent intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uri));
+            remoteAndroidManager.bindRemoteAndroid(intent, remoteAndroidConnection, 0);
+        }
+    };
 
     private ServiceConnection remoteAndroidConnection = new ServiceConnection() {
 
@@ -60,17 +97,25 @@ public class RemoteAndroidController {
 
     private List<ServiceConnection> connections = new ArrayList<ServiceConnection>();
 
-    private RemoteAndroidManager manager;
+    private Context context;
 
     public RemoteAndroidController(Context context) {
-        manager = RA.createManager(context);
+        // manager = RA.createManager(context);
+        this.context = context;
     }
-
+    
     public void open() {
-        // RemoteAndroidManager.bindManager(context, managerListener);
+        RemoteAndroidManager.bindManager(context, managerListener);
+        // manager.newDiscoveredAndroid(discoverListener);
+        // String uri = "ip://192.168.1.122";
+        // Intent intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uri));
+        // manager.bindRemoteAndroid(intent, remoteAndroidConnection, 0);
+    }
+    
+    public void connectHardcoded() {
         String uri = "ip://192.168.1.122";
         Intent intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uri));
-        manager.bindRemoteAndroid(intent, remoteAndroidConnection, 0);
+        remoteAndroidManager.bindRemoteAndroid(intent, remoteAndroidConnection, 0);
     }
 
     public void close() {

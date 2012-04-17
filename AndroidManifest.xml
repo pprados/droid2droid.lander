@@ -29,6 +29,9 @@
 
     <!-- For receive discover events -->
     <uses-permission android:name="org.remoteandroid.permission.discover.RECEIVE" />
+    
+    <!-- For read current QRCode -->
+    <uses-permission android:name="org.remoteandroid.permission.contentprovider.QRCODE"/>
 
     <application
         android:name=".RalanderApplication"
