@@ -1,6 +1,5 @@
 package org.remoteandroid.apps.ralander;
 
-import org.remoteandroid.control.RemoteEvent;
 import org.remoteandroid.control.RemoteEventReceiver;
 import org.remoteandroid.control.RemoteEventReceiver.RemoteEventListener;
 import org.remoteandroid.control.RemoteEventService;
@@ -60,15 +59,15 @@ public class RemoteLunarLanderActivity extends LunarLander {
         }
 
         @Override
-        public void onRemoteEvent(RemoteEvent remoteEvent) {
-            KeyEvent event = (KeyEvent) remoteEvent.getEvent();
-            int keyCode = event.getKeyCode();
-            switch (event.getAction()) {
+        public void onRemoteEvent(Object event) {
+            KeyEvent keyEvent = (KeyEvent) event;
+            int keyCode = keyEvent.getKeyCode();
+            switch (keyEvent.getAction()) {
             case KeyEvent.ACTION_DOWN:
-                lunarView.onKeyDown(keyCode, event);
+                lunarView.onKeyDown(keyCode, keyEvent);
                 break;
             case KeyEvent.ACTION_UP:
-                lunarView.onKeyUp(keyCode, event);
+                lunarView.onKeyUp(keyCode, keyEvent);
                 break;
             }
         }
@@ -104,6 +103,7 @@ public class RemoteLunarLanderActivity extends LunarLander {
                 synchronized (RemoteLunarLanderActivity.this) {
                     if (remoteService != null) {
                         try {
+                            remoteEventReceiver.stop();
                             remoteService.stopCapture();
                         } catch (RemoteException e) {}
                     }

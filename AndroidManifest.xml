@@ -53,7 +53,7 @@
         
         <service android:name="org.remoteandroid.control.RemoteControlService" >
             <intent-filter>
-                <action android:name="org.remoteandroid.apps.ralander.REMOTE_EVENT_SERVICE" />
+                <action android:name="org.remoteandroid.control.REMOTE_CONTROL_SERVICE" />
             </intent-filter>
         </service>
     </application>

@@ -1,6 +1,6 @@
 package org.remoteandroid.apps.ralander;
 
-import org.remoteandroid.control.RAControlActions;
+import org.remoteandroid.control.RemoteControlActions;
 import org.remoteandroid.control.RemoteControlServiceBinder;
 
 import android.app.Activity;
@@ -43,6 +43,7 @@ public class KeyCaptureActivity extends Activity {
         }
     };
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.remote_view);
@@ -51,8 +52,8 @@ public class KeyCaptureActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        bindService(new Intent(RalanderActions.REMOTE_EVENT_SERVICE), serviceConnection, 0);
-        registerReceiver(stopReceiver, new IntentFilter(RAControlActions.STOP_CAPTURE));
+        bindService(new Intent(RalanderActions.REMOTE_CONTROL_SERVICE), serviceConnection, 0);
+        registerReceiver(stopReceiver, new IntentFilter(RemoteControlActions.STOP_CAPTURE));
     }
 
     @Override
@@ -80,7 +81,7 @@ public class KeyCaptureActivity extends Activity {
         return result;
     }
 
-    private boolean mustSendEvent(KeyEvent event) {
+    private static boolean mustSendEvent(KeyEvent event) {
         int code = event.getKeyCode();
         return code != KeyEvent.KEYCODE_BACK && code != KeyEvent.KEYCODE_HOME
                 && code != KeyEvent.KEYCODE_MENU && code != KeyEvent.KEYCODE_SEARCH;

@@ -28,7 +28,7 @@ public class RemoteAndroidController {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             remoteAndroid = (RemoteAndroid) service;
-            Intent intent = new Intent(RalanderActions.REMOTE_EVENT_SERVICE);
+            Intent intent = new Intent(RalanderActions.REMOTE_CONTROL_SERVICE);
             remoteAndroid.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
 

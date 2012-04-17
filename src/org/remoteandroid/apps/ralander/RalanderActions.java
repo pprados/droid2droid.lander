@@ -1,7 +1,7 @@
 package org.remoteandroid.apps.ralander;
 
 public interface RalanderActions {
-    
-    String REMOTE_EVENT_SERVICE = "org.remoteandroid.apps.ralander.REMOTE_EVENT_SERVICE";
+
+    String REMOTE_CONTROL_SERVICE = "org.remoteandroid.control.REMOTE_CONTROL_SERVICE";
 
 }
