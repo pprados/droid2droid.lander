@@ -140,8 +140,7 @@ public class RA {
 
         @Override
         public Context getContext() {
-            // TODO Auto-generated method stub
-            return null;
+            return context;
         }
 
         @Override
