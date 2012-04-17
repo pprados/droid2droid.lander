@@ -14,7 +14,8 @@ public class WaitForClientActivity extends Activity {
     private RemoteAndroidController remoteAndroidController;
 
     private Button button;
-
+    private boolean bound;
+    
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -43,6 +44,7 @@ public class WaitForClientActivity extends Activity {
 
     public void onClick(View v) {
         remoteAndroidController.bindRemoteService(serviceConnection);
+        bound = true;
         button.setEnabled(false);
     }
 
@@ -54,8 +56,11 @@ public class WaitForClientActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        remoteAndroidController.unbindRemoteService(serviceConnection);
-        button.setEnabled(true);
+        if (bound) {
+            remoteAndroidController.unbindRemoteService(serviceConnection);
+            bound = false;
+            button.setEnabled(true);
+        }
     }
 
 }

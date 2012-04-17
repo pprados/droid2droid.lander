@@ -1,12 +1,19 @@
 package org.remoteandroid.apps.ralander;
 
+import org.remoteandroid.control.RAControlActions;
+import org.remoteandroid.control.RemoteControlServiceBinder;
+
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 public class KeyCaptureActivity extends Activity {
 
@@ -26,6 +33,16 @@ public class KeyCaptureActivity extends Activity {
 
     };
 
+    private BroadcastReceiver stopReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(KeyCaptureActivity.this, "Server disconnected", Toast.LENGTH_SHORT)
+                    .show();
+            finish();
+        }
+    };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.remote_view);
@@ -35,12 +52,14 @@ public class KeyCaptureActivity extends Activity {
     protected void onStart() {
         super.onStart();
         bindService(new Intent(RalanderActions.REMOTE_EVENT_SERVICE), serviceConnection, 0);
+        registerReceiver(stopReceiver, new IntentFilter(RAControlActions.STOP_CAPTURE));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         unbindService(serviceConnection);
+        unregisterReceiver(stopReceiver);
     }
 
     @Override
@@ -71,7 +90,7 @@ public class KeyCaptureActivity extends Activity {
     public void onBackPressed() {
         super.onBackPressed();
         if (service != null) {
-            service.stopCapture();
+            service.stopCaptureByClient();
         }
     }
 

@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ public class RemoteLunarLanderActivity extends LunarLander {
 
     private View lunarView;
 
+    private RemoteEventService remoteService;
     private RemoteAndroidController remoteAndroidController;
     private RemoteEventReceiver remoteEventReceiver;
 
@@ -28,7 +30,7 @@ public class RemoteLunarLanderActivity extends LunarLander {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             synchronized (RemoteLunarLanderActivity.this) {
-                RemoteEventService remoteService = RemoteEventService.Stub.asInterface(service);
+                remoteService = RemoteEventService.Stub.asInterface(service);
                 remoteEventReceiver = new RemoteEventReceiver(remoteService, remoteEventListener,
                         new Handler());
                 remoteEventReceiver.start();
@@ -41,6 +43,7 @@ public class RemoteLunarLanderActivity extends LunarLander {
                 if (remoteEventReceiver != null) {
                     remoteEventReceiver.stop();
                     remoteEventReceiver = null;
+                    remoteService = null;
                 }
             }
         }
@@ -51,7 +54,8 @@ public class RemoteLunarLanderActivity extends LunarLander {
 
         @Override
         public void onStoppedByClient() {
-            Toast.makeText(RemoteLunarLanderActivity.this, "Client disconnected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RemoteLunarLanderActivity.this, "Client disconnected",
+                    Toast.LENGTH_SHORT).show();
             finish();
         }
 
@@ -95,11 +99,18 @@ public class RemoteLunarLanderActivity extends LunarLander {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // synchronized (this) {
-        // if (remoteService != null) {
-        // stopService(new Intent(RalanderActions.REMOTE_EVENT_SERVICE));
-        // }
-        // }
+        new Thread(new Runnable() {
+            @Override public void run() {
+                synchronized (RemoteLunarLanderActivity.this) {
+                    if (remoteService != null) {
+                        try {
+                            remoteService.stopCapture();
+                        } catch (RemoteException e) {}
+                    }
+                }
+            }
+        }).start();
+        
     }
 
 }
