@@ -1,7 +1,7 @@
 package org.remoteandroid.apps.ralander;
 
 import org.remoteandroid.control.RemoteControlActions;
-import org.remoteandroid.control.RemoteControlServiceBinder;
+import org.remoteandroid.control.RemoteControlBinder;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -17,18 +17,18 @@ import android.widget.Toast;
 
 public class KeyCaptureActivity extends Activity {
 
-    private RemoteControlServiceBinder service;
+    private RemoteControlBinder remoteControl;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            KeyCaptureActivity.this.service = (RemoteControlServiceBinder) service;
+            KeyCaptureActivity.this.remoteControl = (RemoteControlBinder) service;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            KeyCaptureActivity.this.service = null;
+            KeyCaptureActivity.this.remoteControl = null;
         }
 
     };
@@ -66,8 +66,8 @@ public class KeyCaptureActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         boolean result = super.onKeyDown(keyCode, event);
-        if (mustSendEvent(event) && service != null) {
-            service.sendEvent(event);
+        if (mustSendEvent(event) && remoteControl != null) {
+            remoteControl.sendEvent(event);
         }
         return result;
     }
@@ -75,8 +75,8 @@ public class KeyCaptureActivity extends Activity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         boolean result = super.onKeyUp(keyCode, event);
-        if (mustSendEvent(event) && service != null) {
-            service.sendEvent(event);
+        if (mustSendEvent(event) && remoteControl != null) {
+            remoteControl.sendEvent(event);
         }
         return result;
     }
@@ -90,8 +90,8 @@ public class KeyCaptureActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (service != null) {
-            service.stopCaptureByClient();
+        if (remoteControl != null) {
+            remoteControl.stopCaptureByClient();
         }
     }
 

@@ -47,7 +47,6 @@
         <receiver android:name=".RalanderControlReceiver" >
             <intent-filter>
                 <action android:name="org.remoteandroid.control.START_CAPTURE" />
-                <action android:name="org.remoteandroid.control.STOP_CAPTURE" />
             </intent-filter>
         </receiver>
         
