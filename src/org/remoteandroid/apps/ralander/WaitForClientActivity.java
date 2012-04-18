@@ -2,12 +2,11 @@ package org.remoteandroid.apps.ralander;
 
 import java.io.IOException;
 
+import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidListener;
 import org.remoteandroid.util.RAUtils;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,23 +17,38 @@ import android.widget.ImageView;
 public class WaitForClientActivity extends Activity {
 
     private RemoteAndroidController remoteAndroidController;
+    private boolean discovered;
+    private boolean connected;
 
     private Button button;
     private boolean bound;
     private ImageView qrCode;
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private RemoteAndroidListener remoteAndroidListener = new RemoteAndroidListener() {
 
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            startActivity(new Intent(WaitForClientActivity.this, RemoteLunarLanderActivity.class));
+        public void discovered() {
+            discovered = true;
+            startIfNeeded();
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName name) {
-
+        public void disconnected() {
+            connected = false;
         }
 
+        @Override
+        public void connected(IBinder service) {
+            connected = true;
+            startIfNeeded();
+        }
+
+        private void startIfNeeded() {
+            if (discovered && connected) {
+                startActivity(new Intent(WaitForClientActivity.this,
+                        RemoteLunarLanderActivity.class));
+            }
+        }
     };
 
     @Override
@@ -58,15 +72,17 @@ public class WaitForClientActivity extends Activity {
     }
 
     public void onClick(View v) {
-//        remoteAndroidController.bindRemoteService(serviceConnection);
-//        bound = true;
+        // remoteAndroidController.bindRemoteService(serviceConnection);
+        // bound = true;
+        discovered = true;
         remoteAndroidController.connectHardcoded();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        remoteAndroidController.bindRemoteService(serviceConnection);
+        discovered = false;
+        remoteAndroidController.addRemoteAndroidListener(remoteAndroidListener);
         bound = true;
     }
 
@@ -74,7 +90,7 @@ public class WaitForClientActivity extends Activity {
     protected void onStop() {
         super.onStop();
         if (bound) {
-            remoteAndroidController.unbindRemoteService(serviceConnection);
+            remoteAndroidController.removeRemoteAndroidListener(remoteAndroidListener);
             bound = false;
         }
     }

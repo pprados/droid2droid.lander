@@ -4,18 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
+import org.remoteandroid.RemoteAndroid;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.poc.RA;
+import org.remoteandroid.util.BindRemoteAndroidHelper;
 import org.remoteandroid.util.BindServiceHelper;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
 public class RemoteAndroidController {
 
+    public interface RemoteAndroidListener {
+        void discovered();
+        void connected(IBinder service);
+        void disconnected();
+    }
+    
     private IBinder remoteService;
 
     private ComponentName componentName;
@@ -32,8 +41,26 @@ public class RemoteAndroidController {
 
         @Override
         public void onDiscover(RemoteAndroidInfo remoteAndroidInfo, boolean update) {
-            BindServiceHelper.autobind(remoteAndroidManager, remoteAndroidInfo.getUris(),
-                    serviceConnection);
+            // BindServiceHelper.autobind(remoteAndroidManager, remoteAndroidInfo.getUris(),
+            // serviceConnection);
+            discovered();
+            BindRemoteAndroidHelper.autobind(remoteAndroidManager, remoteAndroidInfo.getUris(),
+                    remoteAndroidConnection);
+        }
+    };
+
+    private ServiceConnection remoteAndroidConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            disconnected();
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            RemoteAndroid remoteAndroid = (RemoteAndroid) service;
+            Intent intent = new Intent(RalanderActions.REMOTE_CONTROL_SERVICE);
+            remoteAndroid.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
     };
 
@@ -55,7 +82,7 @@ public class RemoteAndroidController {
 
     };
 
-    private List<ServiceConnection> connections = new ArrayList<ServiceConnection>();
+    private List<RemoteAndroidListener> listeners = new ArrayList<RemoteAndroidListener>();
 
     private Context context;
 
@@ -69,7 +96,7 @@ public class RemoteAndroidController {
     }
 
     public void connectHardcoded() {
-        String uri = "ip://192.168.0.101";
+        String uri = "ip://192.168.1.114";
         BindServiceHelper.autobind(remoteAndroidManager, new String[] { uri }, serviceConnection);
     }
 
@@ -79,35 +106,44 @@ public class RemoteAndroidController {
         }
     }
 
-    public void bindRemoteService(ServiceConnection serviceConnection) {
-        if (connections.contains(serviceConnection)) {
-            throw new IllegalArgumentException("Trying to bind a serviceConnection already bound");
+    public void addRemoteAndroidListener(RemoteAndroidListener listener) {
+        if (listeners.contains(listener)) {
+            throw new IllegalArgumentException("Trying to add a listener already added");
         }
-        connections.add(serviceConnection);
+        listeners.add(listener);
         if (remoteService != null) {
             // If the service exists, notify it is connected
-            serviceConnection.onServiceConnected(componentName, remoteService);
+            listener.connected(remoteService);
         }
     }
 
-    public void unbindRemoteService(ServiceConnection serviceConnection) {
-        if (!connections.contains(serviceConnection)) {
+    public void removeRemoteAndroidListener(RemoteAndroidListener listener) {
+        if (!listeners.contains(listener)) {
             throw new IllegalArgumentException(
-                    "Trying to unbind a serviceConnection which was not bound");
+                    "Trying to remove a listener not added");
         }
-        connections.remove(serviceConnection);
-        serviceConnection.onServiceDisconnected(componentName);
+        listeners.remove(listener);
+        if (remoteService != null) {
+            // If the service exists, notify the disconnection
+            listener.disconnected();
+        }
+    }
+    
+    private void discovered() {
+        for (RemoteAndroidListener listener : listeners) {
+            listener.discovered();
+        }
     }
 
     private void connected() {
-        for (ServiceConnection connection : connections) {
-            connection.onServiceConnected(componentName, remoteService);
+        for (RemoteAndroidListener listener : listeners) {
+            listener.connected(remoteService);
         }
     }
 
     private void disconnected() {
-        for (ServiceConnection connection : connections) {
-            connection.onServiceDisconnected(componentName);
+        for (RemoteAndroidListener listener : listeners) {
+            listener.disconnected();
         }
     }
 
