@@ -1,10 +1,10 @@
 package org.remoteandroid.apps.ralander;
 
+import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidDefaultListener;
 import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidListener;
 import org.remoteandroid.control.RemoteControlHelper;
 import org.remoteandroid.control.RemoteEventReceiver.RemoteEventListener;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.KeyEvent;
@@ -20,7 +20,7 @@ public class RemoteLunarLanderActivity extends LunarLander {
     private RemoteAndroidController remoteAndroidController;
     private boolean stoppedByClient;
 
-    private RemoteAndroidListener remoteAndroidListener = new RemoteAndroidListener() {
+    private RemoteAndroidListener remoteAndroidListener = new RemoteAndroidDefaultListener() {
 
         @Override
         public void discovered() {}

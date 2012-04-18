@@ -2,10 +2,13 @@ package org.remoteandroid.apps.ralander;
 
 import java.io.IOException;
 
+import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidDefaultListener;
 import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidListener;
 import org.remoteandroid.util.RAUtils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -13,18 +16,23 @@ import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class WaitForClientActivity extends Activity {
 
     private RemoteAndroidController remoteAndroidController;
     private boolean discovered;
     private boolean connected;
+    private boolean installed;
 
     private Button button;
     private boolean bound;
     private ImageView qrCode;
 
-    private RemoteAndroidListener remoteAndroidListener = new RemoteAndroidListener() {
+    private ProgressDialog progressDialog;
+    private AlertDialog alertDialog;
+
+    private RemoteAndroidListener remoteAndroidListener = new RemoteAndroidDefaultListener() {
 
         @Override
         public void discovered() {
@@ -43,8 +51,48 @@ public class WaitForClientActivity extends Activity {
             startIfNeeded();
         }
 
+        @Override
+        public void pushStarted() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(WaitForClientActivity.this);
+            alertDialog = builder.setTitle("Waiting for client").setMessage("Please wait...")
+                    .create();
+            alertDialog.show();
+        }
+
+        @Override
+        public void pushProgress(int progress) {
+            if (progressDialog == null) {
+                alertDialog.hide();
+                progressDialog = new ProgressDialog(WaitForClientActivity.this);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                // progress is between 0 and 10000, see AbstractRemoteAndroidImpl.pushMe(...)
+                progressDialog.setMax(10000);
+                progressDialog.setProgressNumberFormat(null);
+                progressDialog.setMessage("Sending APK...");
+                progressDialog.show();
+            }
+            progressDialog.setProgress(progress);
+            if (progress == 10000) {
+                progressDialog.dismiss();
+                progressDialog = null;
+                alertDialog.show();
+            }
+        }
+
+        @Override
+        public void pushFinished(int status) {
+            alertDialog.dismiss();
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+            if (status >= 0) {
+                installed = true;
+            }
+        }
+
         private void startIfNeeded() {
-            if (discovered && connected) {
+            if (discovered && installed && connected) {
                 startActivity(new Intent(WaitForClientActivity.this,
                         RemoteLunarLanderActivity.class));
             }
@@ -82,6 +130,8 @@ public class WaitForClientActivity extends Activity {
     protected void onStart() {
         super.onStart();
         discovered = false;
+        connected = false;
+        installed = false;
         remoteAndroidController.addRemoteAndroidListener(remoteAndroidListener);
         bound = true;
     }
