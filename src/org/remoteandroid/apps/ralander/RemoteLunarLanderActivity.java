@@ -57,7 +57,8 @@ public class RemoteLunarLanderActivity extends LunarLander {
 
         @Override
         public void onRemoteEvent(Object event) {
-            KeyEvent keyEvent = (KeyEvent) event;
+            ControlEvent controlEvent = (ControlEvent) event;
+            KeyEvent keyEvent = toKeyEvent(controlEvent);
             int keyCode = keyEvent.getKeyCode();
             switch (keyEvent.getAction()) {
             case KeyEvent.ACTION_DOWN:
@@ -68,7 +69,40 @@ public class RemoteLunarLanderActivity extends LunarLander {
                 break;
             }
         }
+
     };
+
+    private static KeyEvent toKeyEvent(ControlEvent event) {
+        int key;
+        int action;
+        switch (event.getKey()) {
+        case LEFT:
+            key = KeyEvent.KEYCODE_DPAD_LEFT;
+            break;
+        case RIGHT:
+            key = KeyEvent.KEYCODE_DPAD_RIGHT;
+            break;
+        case UP:
+            key = KeyEvent.KEYCODE_DPAD_UP;
+            break;
+        case FIRE:
+            key = KeyEvent.KEYCODE_SPACE;
+            break;
+        default:
+            return null;
+        }
+        switch (event.getAction()) {
+        case UP:
+            action = KeyEvent.ACTION_UP;
+            break;
+        case DOWN:
+            action = KeyEvent.ACTION_DOWN;
+            break;
+        default:
+            return null;
+        }
+        return new KeyEvent(action, key);
+    }
 
     private RemoteControlHelper remoteControlHelper = new RemoteControlHelper(remoteEventListener);
 
