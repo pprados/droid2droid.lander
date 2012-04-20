@@ -2,7 +2,6 @@ package org.remoteandroid.apps.ralander;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
@@ -13,7 +12,6 @@ import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.RemoteAndroidInfoImpl;
 import org.remoteandroid.poc.RA;
 import org.remoteandroid.util.BindRemoteAndroidHelper;
-import org.remoteandroid.util.BindServiceHelper;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -171,11 +169,11 @@ public class RemoteAndroidController {
     }
 
     public void open() {
-        remoteAndroidManager.newDiscoveredAndroid(discoverListener);
+        RemoteAndroidManager.newDiscoveredAndroid(context, discoverListener);
     }
 
     public void connectHardcoded() {
-        String uri = "ip://192.168.1.114";
+        String uri = "ip://192.168.1.132";
         RemoteAndroidInfoImpl info = new RemoteAndroidInfoImpl();
         info.uris = new ArrayList<String>();
         info.uris.add(uri);
