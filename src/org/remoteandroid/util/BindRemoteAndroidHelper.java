@@ -1,11 +1,8 @@
 package org.remoteandroid.util;
 
-import org.remoteandroid.RemoteAndroid;
 import org.remoteandroid.RemoteAndroidManager;
-import org.remoteandroid.apps.ralander.RalanderActions;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
