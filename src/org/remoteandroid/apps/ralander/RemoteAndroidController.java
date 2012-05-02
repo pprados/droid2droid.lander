@@ -173,7 +173,7 @@ public class RemoteAndroidController {
     }
 
     public void connectHardcoded() {
-        String uri = "ip://192.168.1.132";
+        String uri = "ip://192.168.1.117";
         RemoteAndroidInfoImpl info = new RemoteAndroidInfoImpl();
         info.uris = new ArrayList<String>();
         info.uris.add(uri);
@@ -207,6 +207,9 @@ public class RemoteAndroidController {
         if (remoteService != null) {
             // If the service exists, notify the disconnection
             listener.disconnected();
+        }
+        if (listeners.isEmpty() && remoteAndroid != null) {
+            remoteAndroid.close();
         }
     }
 
