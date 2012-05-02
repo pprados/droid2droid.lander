@@ -187,7 +187,7 @@ public class RemoteEventReceiver {
     	}
     	
     	public synchronized boolean isFakeInterrupted() {
-    		return false;
+            return fakeInterrupted;
     	}
     }
 
