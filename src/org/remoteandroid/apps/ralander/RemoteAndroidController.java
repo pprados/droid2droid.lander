@@ -171,11 +171,12 @@ public class RemoteAndroidController {
     }
 
     public void open() {
-        remoteAndroidManager.newDiscoveredAndroid(discoverListener);
+    	RemoteAndroidManager.newDiscoveredAndroid(context, discoverListener);
     }
 
     public void connectHardcoded() {
-        String uri = "ip://192.168.1.114";
+//        String uri = "ip://192.168.1.114";
+        String uri = "ip://192.168.1.111";
         RemoteAndroidInfoImpl info = new RemoteAndroidInfoImpl();
         info.uris = new ArrayList<String>();
         info.uris.add(uri);

@@ -86,13 +86,13 @@ public class RA {
             return false;
         }
 
-        @Override
-        public ListRemoteAndroidInfo newDiscoveredAndroid(DiscoverListener callback) {
-            // TODO find a better way, here it just ignores the delegate ; and add a permission
-            // check
-            return new ListRemoteAndroidInfoImpl(this, callback);
-        }
-
+//        @Override
+//        public ListRemoteAndroidInfo newDiscoveredAndroid(DiscoverListener callback) {
+//            // TODO find a better way, here it just ignores the delegate ; and add a permission
+//            // check
+//            return new ListRemoteAndroidInfoImpl(this, callback);
+//        }
+//
         @Override
         public void startDiscover(int flags, long timeToDiscover) {
             // TODO Auto-generated method stub
@@ -155,12 +155,12 @@ public class RA {
             return 0;
         }
 
-        @Override
-        public RemoteAndroidInfo parseNfcRawMessages(Context context, Parcelable[] rawMessage) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
+//        @Override
+//        public RemoteAndroidInfo parseNfcRawMessages(Context context, Parcelable[] rawMessage) {
+//            // TODO Auto-generated method stub
+//            return null;
+//        }
+//
         @Override
         @Deprecated
         public void setLog(int type, boolean state) {

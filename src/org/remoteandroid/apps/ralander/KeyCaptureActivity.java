@@ -94,12 +94,22 @@ public class KeyCaptureActivity extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if ((keyCode==KeyEvent.KEYCODE_HOME) || (keyCode==KeyEvent.KEYCODE_BACK))
+    	{
+    		onBackPressed();
+    		return super.onKeyDown(keyCode, event);
+    	}
         onKeyEvent(event);
         return true;
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
+//    	if ((keyCode==KeyEvent.KEYCODE_HOME) || (keyCode==KeyEvent.KEYCODE_BACK))
+//    	{
+//    		onBackPressed();
+//    		return super.onKeyDown(keyCode, event);
+//    	}
         onKeyEvent(event);
         return true;
     }

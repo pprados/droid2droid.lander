@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import org.remoteandroid.RemoteAndroidManager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +15,8 @@ public class RAUtils {
 
     private RAUtils() {}
 
-    public static Bitmap createQRCodeBitmap(Context context) throws IOException {
+    @SuppressLint("NewApi")
+	public static Bitmap createQRCodeBitmap(Context context) throws IOException {
         InputStream in = null;
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
