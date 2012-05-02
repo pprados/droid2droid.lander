@@ -60,7 +60,7 @@ public class BindRemoteAndroidHelper {
 
     private void connect(String uri) {
         Intent intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uri));
-        manager.bindRemoteAndroid(intent, remoteAndroidConnection, 0);
+        manager.bindRemoteAndroid(intent, remoteAndroidConnection, RemoteAndroidManager.FLAG_PROPOSE_PAIRING);
     }
 
 }

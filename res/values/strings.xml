@@ -15,7 +15,7 @@
 -->
 
 <resources>
-	<string name="app_name">RALander</string>
+	<string name="app_name">RA Lander</string>
 	
     <string name="menu_start">Start</string>
     <string name="menu_stop">Stop</string>

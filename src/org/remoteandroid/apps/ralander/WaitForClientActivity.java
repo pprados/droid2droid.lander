@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
@@ -59,7 +60,7 @@ public class WaitForClientActivity extends Activity {
             alertDialog.show();
         }
 
-        @Override
+		@Override
         public void pushProgress(int progress) {
             if (progressDialog == null) {
                 alertDialog.hide();
@@ -67,7 +68,8 @@ public class WaitForClientActivity extends Activity {
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 // progress is between 0 and 10000, see AbstractRemoteAndroidImpl.pushMe(...)
                 progressDialog.setMax(10000);
-                progressDialog.setProgressNumberFormat(null);
+                if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+                	progressDialog.setProgressNumberFormat(null);
                 progressDialog.setMessage("Sending APK...");
                 progressDialog.show();
             }

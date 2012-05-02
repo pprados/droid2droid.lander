@@ -14,7 +14,7 @@ public class RAUtils {
 
     private RAUtils() {}
 
-    public static Bitmap createQRCodeBitmap(Context context) throws IOException {
+	public static Bitmap createQRCodeBitmap(Context context) throws IOException {
         InputStream in = null;
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

@@ -25,17 +25,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.remoteandroid.apps.ralander" >
 
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="15" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- For receive discover events -->
     <uses-permission android:name="org.remoteandroid.permission.discover.RECEIVE" />
-    
+
     <!-- For read current QRCode -->
-    <uses-permission android:name="org.remoteandroid.permission.contentprovider.QRCODE"/>
+    <uses-permission android:name="org.remoteandroid.permission.contentprovider.QRCODE" />
 
     <application
         android:name=".RalanderApplication"
-        android:icon="@drawable/app_lunar_lander"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity android:name=".WaitForClientActivity" >
             <intent-filter>
@@ -52,7 +56,7 @@
                 <action android:name="org.remoteandroid.control.START_CAPTURE" />
             </intent-filter>
         </receiver>
-        
+
         <service android:name="org.remoteandroid.control.RemoteControlService" >
             <intent-filter>
                 <action android:name="org.remoteandroid.control.REMOTE_CONTROL_SERVICE" />
