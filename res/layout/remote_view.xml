@@ -23,8 +23,8 @@
 
         <Button
             android:id="@+id/upButton"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:padding="16dp"
             android:text="Up" />
     </TableRow>
@@ -35,22 +35,22 @@
 
         <Button
             android:id="@+id/leftButton"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:padding="16dp"
             android:text="Left" />
 
         <Button
             android:id="@+id/fireButton"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:padding="16dp"
             android:text="Fire" />
 
         <Button
             android:id="@+id/rightButton"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:padding="16dp"
             android:text="Right" />
     </TableRow>
