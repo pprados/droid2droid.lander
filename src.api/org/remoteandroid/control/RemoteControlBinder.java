@@ -6,7 +6,6 @@ import java.util.List;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
 import android.os.RemoteException;
 
 /**
@@ -116,7 +115,6 @@ public class RemoteControlBinder extends RemoteControl.Stub {
             service.sendBroadcast(intent);
         }
         notify();
-        service.stopSelf();
     }
 
     /**
