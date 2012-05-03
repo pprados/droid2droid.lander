@@ -17,6 +17,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -209,7 +210,15 @@ public class RemoteAndroidController {
             listener.disconnected();
         }
         if (listeners.isEmpty() && remoteAndroid != null) {
-            remoteAndroid.close();
+        	new AsyncTask<Void, Void, Void>()
+        	{
+        		@Override
+        		protected Void doInBackground(Void... params)
+        		{
+                    remoteAndroid.close();
+        			return null;
+        		}
+        	}.execute();
         }
     }
 
