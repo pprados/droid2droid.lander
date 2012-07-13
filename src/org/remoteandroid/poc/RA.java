@@ -123,7 +123,7 @@ public class RA {
         }
 
         @Override
-        public synchronized ListRemoteAndroidInfo getBoundedDevices() {
+        public synchronized ListRemoteAndroidInfo getBondedDevices() {
             bindDelegate();
             if (delegate == null) {
                 try {
@@ -135,7 +135,7 @@ public class RA {
                 }
 
             }
-            return delegate.getBoundedDevices();
+            return delegate.getBondedDevices();
         }
 
         @Override
