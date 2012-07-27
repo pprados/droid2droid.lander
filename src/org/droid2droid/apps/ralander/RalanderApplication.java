@@ -1,10 +1,10 @@
-package org.remoteandroid.apps.ralander;
+package org.droid2droid.apps.ralander;
 
 import android.app.Application;
 
 public class RalanderApplication extends Application {
 
-    private RemoteAndroidController remoteAndroidController = new RemoteAndroidController(this);
+    private Droid2DroidController remoteAndroidController = new Droid2DroidController(this);
 
     @Override
     public void onCreate() {
@@ -12,7 +12,7 @@ public class RalanderApplication extends Application {
         remoteAndroidController.open();
     }
 
-    public RemoteAndroidController getRemoteAndroidController() {
+    public Droid2DroidController getRemoteAndroidController() {
         return remoteAndroidController;
     }
 

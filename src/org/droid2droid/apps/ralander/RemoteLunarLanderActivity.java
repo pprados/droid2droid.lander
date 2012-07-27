@@ -1,9 +1,9 @@
-package org.remoteandroid.apps.ralander;
+package org.droid2droid.apps.ralander;
 
-import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidDefaultListener;
-import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidListener;
-import org.remoteandroid.control.RemoteControlHelper;
-import org.remoteandroid.control.RemoteEventReceiver.RemoteEventListener;
+import org.droid2droid.apps.ralander.Droid2DroidController.RemoteAndroidDefaultListener;
+import org.droid2droid.apps.ralander.Droid2DroidController.RemoteAndroidListener;
+import org.droid2droid.control.RemoteControlHelper;
+import org.droid2droid.control.RemoteEventReceiver.RemoteEventListener;
 
 import android.os.Bundle;
 import android.os.IBinder;
@@ -17,10 +17,10 @@ public class RemoteLunarLanderActivity extends LunarLander {
 
     private View lunarView;
 
-    private RemoteAndroidController remoteAndroidController;
+    private Droid2DroidController remoteAndroidController;
     private boolean stoppedByClient;
 
-    private RemoteAndroidListener remoteAndroidListener = new RemoteAndroidDefaultListener() {
+    private final RemoteAndroidListener remoteAndroidListener = new RemoteAndroidDefaultListener() {
 
         @Override
         public void discovered() {}
@@ -45,7 +45,7 @@ public class RemoteLunarLanderActivity extends LunarLander {
 
     };
 
-    private RemoteEventListener remoteEventListener = new RemoteEventListener() {
+    private final RemoteEventListener remoteEventListener = new RemoteEventListener() {
 
         @Override
         public void onStoppedByClient() {
@@ -104,13 +104,13 @@ public class RemoteLunarLanderActivity extends LunarLander {
         return new KeyEvent(action, key);
     }
 
-    private RemoteControlHelper remoteControlHelper = new RemoteControlHelper(remoteEventListener);
+    private final RemoteControlHelper remoteControlHelper = new RemoteControlHelper(remoteEventListener);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        lunarView = (View) findViewById(R.id.lunar);
+        lunarView = findViewById(R.id.lunar);
 
         remoteAndroidController = ((RalanderApplication) getApplication())
                 .getRemoteAndroidController();

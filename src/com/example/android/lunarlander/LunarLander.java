@@ -16,7 +16,7 @@
 
 package com.example.android.lunarlander;
 
-import org.remoteandroid.apps.ralander.R;
+import org.droid2droid.apps.ralander.R;
 
 import android.app.Activity;
 import android.os.Bundle;

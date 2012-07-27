@@ -1,6 +1,8 @@
-package org.remoteandroid.util;
+package org.droid2droid.util;
 
-import org.remoteandroid.RemoteAndroidManager;
+import static org.droid2droid.Droid2DroidManager.FLAG_PROPOSE_PAIRING;
+
+import org.droid2droid.Droid2DroidManager;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -8,16 +10,16 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.IBinder;
 
-public class BindRemoteAndroidHelper {
+public class BindDroid2DroidHelper {
     
-    private RemoteAndroidManager manager;
-    private String[] uris;
-    private ServiceConnection delegate;
+    private final Droid2DroidManager manager;
+    private final String[] uris;
+    private final ServiceConnection delegate;
     private int index;
 
     private boolean connectionSuccessful;
 
-    private ServiceConnection remoteAndroidConnection = new ServiceConnection() {
+    private final ServiceConnection remoteAndroidConnection = new ServiceConnection() {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -32,11 +34,11 @@ public class BindRemoteAndroidHelper {
     };
 
   
-    public static void autobind(RemoteAndroidManager manager, String[] uris, ServiceConnection conn) {
-        new BindRemoteAndroidHelper(manager, uris, conn).bind();
+    public static void autobind(Droid2DroidManager manager, String[] uris, ServiceConnection conn) {
+        new BindDroid2DroidHelper(manager, uris, conn).bind();
     }
 
-    private BindRemoteAndroidHelper(RemoteAndroidManager manager, String[] uris, ServiceConnection conn) {
+    private BindDroid2DroidHelper(Droid2DroidManager manager, String[] uris, ServiceConnection conn) {
         this.manager = manager;
         this.uris = uris;
         this.delegate = conn;
@@ -57,7 +59,7 @@ public class BindRemoteAndroidHelper {
 
     private void connect(String uri) {
         Intent intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uri));
-        manager.bindRemoteAndroid(intent, remoteAndroidConnection, RemoteAndroidManager.FLAG_PROPOSE_PAIRING);
+        manager.bindRemoteAndroid(intent, remoteAndroidConnection, FLAG_PROPOSE_PAIRING);
     }
 
 }

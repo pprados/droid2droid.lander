@@ -1,4 +1,4 @@
-package org.remoteandroid.control;
+package org.droid2droid.control;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -1,27 +1,28 @@
-package org.remoteandroid.apps.ralander;
+package org.droid2droid.apps.ralander;
 
 import java.io.IOException;
 
-import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidDefaultListener;
-import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidListener;
-import org.remoteandroid.util.RAUtils;
+import org.droid2droid.apps.ralander.Droid2DroidController.RemoteAndroidDefaultListener;
+import org.droid2droid.apps.ralander.Droid2DroidController.RemoteAndroidListener;
+import org.droid2droid.util.RAUtils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 public class WaitForClientActivity extends Activity {
 
-    private RemoteAndroidController remoteAndroidController;
+    private Droid2DroidController remoteAndroidController;
     private boolean discovered;
     private boolean connected;
     private boolean installed;
@@ -33,7 +34,7 @@ public class WaitForClientActivity extends Activity {
     private ProgressDialog progressDialog;
     private AlertDialog alertDialog;
 
-    private RemoteAndroidListener remoteAndroidListener = new RemoteAndroidDefaultListener() {
+    private final RemoteAndroidListener remoteAndroidListener = new RemoteAndroidDefaultListener() {
 
         @Override
         public void discovered() {
@@ -60,6 +61,7 @@ public class WaitForClientActivity extends Activity {
             alertDialog.show();
         }
 
+		@TargetApi(11)
 		@Override
         public void pushProgress(int progress) {
             if (progressDialog == null) {
@@ -68,7 +70,7 @@ public class WaitForClientActivity extends Activity {
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 // progress is between 0 and 10000, see AbstractRemoteAndroidImpl.pushMe(...)
                 progressDialog.setMax(10000);
-                if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+                if (VERSION.SDK_INT>=VERSION_CODES.HONEYCOMB)
                 	progressDialog.setProgressNumberFormat(null);
                 progressDialog.setMessage("Sending APK...");
                 progressDialog.show();

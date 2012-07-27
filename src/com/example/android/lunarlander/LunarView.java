@@ -16,7 +16,7 @@
 
 package com.example.android.lunarlander;
 
-import org.remoteandroid.apps.ralander.R;
+import org.droid2droid.apps.ralander.R;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -127,7 +127,7 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
         private int mCanvasWidth = 1;
 
         /** What to draw for the Lander when it has crashed */
-        private Drawable mCrashedImage;
+        private final Drawable mCrashedImage;
 
         /**
          * Current difficulty -- amount of fuel, allowed angle, etc. Default is
@@ -145,7 +145,7 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
         private boolean mEngineFiring;
 
         /** What to draw for the Lander when the engine is firing */
-        private Drawable mFiringImage;
+        private final Drawable mFiringImage;
 
         /** Fuel remaining */
         private double mFuel;
@@ -163,7 +163,7 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
         private int mGoalX;
 
         /** Message handler used by thread to interact with TextView */
-        private Handler mHandler;
+        private final Handler mHandler;
 
         /**
          * Lander heading in degrees, with 0 up, 90 right. Kept in the range
@@ -175,7 +175,7 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
         private int mLanderHeight;
 
         /** What to draw for the Lander in its normal state */
-        private Drawable mLanderImage;
+        private final Drawable mLanderImage;
 
         /** Pixel width of lander image. */
         private int mLanderWidth;
@@ -184,10 +184,10 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
         private long mLastTime;
 
         /** Paint to draw the lines on screen. */
-        private Paint mLinePaint;
+        private final Paint mLinePaint;
 
         /** "Bad" speed-too-high variant of the line color. */
-        private Paint mLinePaintBad;
+        private final Paint mLinePaintBad;
 
         /** The state of the game. One of READY, RUNNING, PAUSE, LOSE, or WIN */
         private int mMode;
@@ -199,10 +199,10 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
         private boolean mRun = false;
 
         /** Scratch rect object. */
-        private RectF mScratchRect;
+        private final RectF mScratchRect;
 
         /** Handle to the surface manager object we interact with */
-        private SurfaceHolder mSurfaceHolder;
+        private final SurfaceHolder mSurfaceHolder;
 
         /** Number of wins in a row. */
         private int mWinsInARow;
@@ -786,7 +786,7 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
     private TextView mStatusText;
 
     /** The thread that actually draws the animation */
-    private LunarThread thread;
+    private final LunarThread thread;
 
     public LunarView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -850,7 +850,8 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /* Callback invoked when the surface dimensions change. */
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
+    @Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
             int height) {
         thread.setSurfaceSize(width, height);
     }
@@ -859,7 +860,8 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
      * Callback invoked when the Surface has been created and is ready to be
      * used.
      */
-    public void surfaceCreated(SurfaceHolder holder) {
+    @Override
+	public void surfaceCreated(SurfaceHolder holder) {
         // start the thread here so that we don't busy-wait in run()
         // waiting for the surface to be created
         thread.setRunning(true);
@@ -871,7 +873,8 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
      * be touched. WARNING: after this method returns, the Surface/Canvas must
      * never be touched again!
      */
-    public void surfaceDestroyed(SurfaceHolder holder) {
+    @Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
         // we have to tell thread to shut down & wait for it to finish, or else
         // it might touch the Surface after we return and explode
         boolean retry = true;

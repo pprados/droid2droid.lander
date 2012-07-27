@@ -1,6 +1,6 @@
-package org.remoteandroid.apps.ralander;
+package org.droid2droid.apps.ralander;
 
-import org.remoteandroid.control.RemoteControlReceiver;
+import org.droid2droid.control.RemoteControlReceiver;
 
 import android.content.Context;
 import android.content.Intent;

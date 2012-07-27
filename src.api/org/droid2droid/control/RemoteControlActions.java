@@ -1,4 +1,4 @@
-package org.remoteandroid.control;
+package org.droid2droid.control;
 
 /**
  * Action String constants.
@@ -9,9 +9,9 @@ package org.remoteandroid.control;
 public interface RemoteControlActions {
 
     /** Broadcast used when the game-host want to start the control-host. */
-    String START_CAPTURE = "org.remoteandroid.control.START_CAPTURE";
+    String START_CAPTURE = "org.droid2droid.control.START_CAPTURE";
 
     /** Broadcast used when the game-host want to stop the control-host. */
-    String STOP_CAPTURE = "org.remoteandroid.control.STOP_CAPTURE";
+    String STOP_CAPTURE = "org.droid2droid.control.STOP_CAPTURE";
 
 }

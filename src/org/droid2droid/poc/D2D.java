@@ -1,70 +1,67 @@
-package org.remoteandroid.poc;
+package org.droid2droid.poc;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.remoteandroid.ListRemoteAndroidInfo;
-import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
-import org.remoteandroid.internal.ListRemoteAndroidInfoImpl;
-import org.remoteandroid.RemoteAndroidInfo;
-import org.remoteandroid.RemoteAndroidManager;
+import org.droid2droid.Droid2DroidManager;
+import org.droid2droid.ListRemoteAndroidInfo;
+import org.droid2droid.RemoteAndroidInfo;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.nfc.NdefMessage;
-import android.os.Parcelable;
-
-public class RA {
+public class D2D {
 
     private static final int BIND_TIMEOUT = 10000;
 
-    private RA() {}
+    private D2D() {}
 
-    public static RemoteAndroidManager createManager(Context context) {
-        return new RemoteAndroidManagerProxy(context);
+    public static Droid2DroidManager createManager(Context context) {
+        return new Droid2DroidManagerProxy(context);
     }
 
-    private static class RemoteAndroidManagerProxy extends RemoteAndroidManager {
+    private static class Droid2DroidManagerProxy extends Droid2DroidManager {
 
-        private Context context;
+        private final Context context;
 
-        private RemoteAndroidManager delegate;
+        private Droid2DroidManager delegate;
 
         private boolean bindRequested;
 
-        private List<Runnable> pendingCalls = new ArrayList<Runnable>();
+        private final List<Runnable> pendingCalls = new ArrayList<Runnable>();
 
-        private ManagerListener managerListener = new ManagerListener() {
+        private final ManagerListener managerListener = new ManagerListener() {
 
             @Override
-            public void bind(RemoteAndroidManager manager) {
-                synchronized (RemoteAndroidManagerProxy.this) {
+            public void bind(Droid2DroidManager manager) {
+                synchronized (Droid2DroidManagerProxy.this) {
                     delegate = manager;
                     for (Runnable runnable : pendingCalls) {
                         runnable.run();
                     }
                     pendingCalls.clear();
-                    RemoteAndroidManagerProxy.this.notifyAll();
+                    Droid2DroidManagerProxy.this.notifyAll();
                 }
             }
 
             @Override
-            public void unbind(RemoteAndroidManager manager) {
-                synchronized (RemoteAndroidManagerProxy.this) {
+            public void unbind(Droid2DroidManager manager) {
+                synchronized (Droid2DroidManagerProxy.this) {
                     delegate = null;
                 }
             }
 
         };
 
-        RemoteAndroidManagerProxy(Context context) {
+        Droid2DroidManagerProxy(Context context) {
             this.context = context;
         }
 
         private void bindDelegate() {
             if (!bindRequested) {
-                RemoteAndroidManager.bindManager(context, managerListener);
+                Droid2DroidManager.bindManager(context, managerListener);
                 bindRequested = true;
             }
         }
@@ -117,12 +114,6 @@ public class RA {
         }
 
         @Override
-        public NdefMessage createNdefMessage() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
         public synchronized ListRemoteAndroidInfo getBondedDevices() {
             bindDelegate();
             if (delegate == null) {
@@ -167,6 +158,14 @@ public class RA {
             // TODO Auto-generated method stub
             // deprecated
         }
+
+		@TargetApi(9)
+		@Override
+		public NdefMessage createNdefMessage()
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
 
     }
 

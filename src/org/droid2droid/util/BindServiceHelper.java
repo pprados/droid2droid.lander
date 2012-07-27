@@ -1,8 +1,8 @@
-package org.remoteandroid.util;
+package org.droid2droid.util;
 
-import org.remoteandroid.RemoteAndroid;
-import org.remoteandroid.RemoteAndroidManager;
-import org.remoteandroid.apps.ralander.RalanderActions;
+import org.droid2droid.Droid2DroidManager;
+import org.droid2droid.RemoteAndroid;
+import org.droid2droid.apps.ralander.RalanderActions;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,17 +10,16 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.IBinder;
-
 public class BindServiceHelper {
 
-    private RemoteAndroidManager manager;
-    private String[] uris;
-    private ServiceConnection delegateServiceConnection;
+    private final Droid2DroidManager manager;
+    private final String[] uris;
+    private final ServiceConnection delegateServiceConnection;
     private int index;
 
     private boolean connectionSuccessful;
 
-    private ServiceConnection remoteAndroidConnection = new ServiceConnection() {
+    private final ServiceConnection remoteAndroidConnection = new ServiceConnection() {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -35,7 +34,7 @@ public class BindServiceHelper {
         }
     };
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -49,11 +48,11 @@ public class BindServiceHelper {
         }
     };
 
-    public static void autobind(RemoteAndroidManager manager, String[] uris, ServiceConnection conn) {
+    public static void autobind(Droid2DroidManager manager, String[] uris, ServiceConnection conn) {
         new BindServiceHelper(manager, uris, conn).bind();
     }
 
-    private BindServiceHelper(RemoteAndroidManager manager, String[] uris, ServiceConnection conn) {
+    private BindServiceHelper(Droid2DroidManager manager, String[] uris, ServiceConnection conn) {
         this.manager = manager;
         this.uris = uris;
         this.delegateServiceConnection = conn;

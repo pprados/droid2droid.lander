@@ -1,7 +1,9 @@
-package org.remoteandroid.control;
+package org.droid2droid.control;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.remoteandroid.control.RemoteControl;
 
 import android.app.Service;
 import android.content.Context;

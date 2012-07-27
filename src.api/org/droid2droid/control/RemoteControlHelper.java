@@ -1,6 +1,7 @@
-package org.remoteandroid.control;
+package org.droid2droid.control;
 
-import org.remoteandroid.control.RemoteEventReceiver.RemoteEventListener;
+import org.droid2droid.control.RemoteEventReceiver.RemoteEventListener;
+import org.remoteandroid.control.RemoteControl;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;

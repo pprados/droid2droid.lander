@@ -1,4 +1,4 @@
-package org.remoteandroid.apps.ralander;
+package org.droid2droid.apps.ralander;
 
 import android.os.Parcel;
 import android.os.Parcelable;

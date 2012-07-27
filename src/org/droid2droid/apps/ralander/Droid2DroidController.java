@@ -1,17 +1,17 @@
-package org.remoteandroid.apps.ralander;
+package org.droid2droid.apps.ralander;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
-import org.remoteandroid.RemoteAndroid;
-import org.remoteandroid.RemoteAndroid.PublishListener;
-import org.remoteandroid.RemoteAndroidInfo;
-import org.remoteandroid.RemoteAndroidManager;
-import org.remoteandroid.internal.RemoteAndroidInfoImpl;
-import org.remoteandroid.poc.RA;
-import org.remoteandroid.util.BindRemoteAndroidHelper;
+import org.droid2droid.Droid2DroidManager;
+import org.droid2droid.ListRemoteAndroidInfo.DiscoverListener;
+import org.droid2droid.RemoteAndroid;
+import org.droid2droid.RemoteAndroid.PublishListener;
+import org.droid2droid.RemoteAndroidInfo;
+import org.droid2droid.internal.RemoteAndroidInfoImpl;
+import org.droid2droid.poc.D2D;
+import org.droid2droid.util.BindDroid2DroidHelper;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -23,7 +23,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
-public class RemoteAndroidController {
+public class Droid2DroidController {
 
     public interface RemoteAndroidListener {
         void discovered();
@@ -65,10 +65,10 @@ public class RemoteAndroidController {
 
     private ComponentName componentName;
 
-    private RemoteAndroidManager remoteAndroidManager;
+    private final Droid2DroidManager remoteAndroidManager;
     private RemoteAndroid remoteAndroid;
 
-    private DiscoverListener discoverListener = new DiscoverListener() {
+    private final DiscoverListener discoverListener = new DiscoverListener() {
 
         @Override
         public void onDiscoverStop() {}
@@ -81,12 +81,12 @@ public class RemoteAndroidController {
             // BindServiceHelper.autobind(remoteAndroidManager, remoteAndroidInfo.getUris(),
             // serviceConnection);
             discovered();
-            BindRemoteAndroidHelper.autobind(remoteAndroidManager, remoteAndroidInfo.getUris(),
+            BindDroid2DroidHelper.autobind(remoteAndroidManager, remoteAndroidInfo.getUris(),
                     remoteAndroidConnection);
         }
     };
 
-    private ServiceConnection remoteAndroidConnection = new ServiceConnection() {
+    private final ServiceConnection remoteAndroidConnection = new ServiceConnection() {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -111,7 +111,7 @@ public class RemoteAndroidController {
         }
     };
 
-    private PublishListener publishListener = new PublishListener() {
+    private final PublishListener publishListener = new PublishListener() {
 
         @Override
         public void onProgress(int progress) {
@@ -142,7 +142,7 @@ public class RemoteAndroidController {
         }
     };
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -160,17 +160,17 @@ public class RemoteAndroidController {
 
     };
 
-    private List<RemoteAndroidListener> listeners = new ArrayList<RemoteAndroidListener>();
+    private final List<RemoteAndroidListener> listeners = new ArrayList<RemoteAndroidListener>();
 
-    private Context context;
+    private final Context context;
 
-    public RemoteAndroidController(Context context) {
+    public Droid2DroidController(Context context) {
         this.context = context;
-        remoteAndroidManager = RA.createManager(context);
+        remoteAndroidManager = D2D.createManager(context);
     }
 
     public void open() {
-        RemoteAndroidManager.newDiscoveredAndroid(context, discoverListener);
+        Droid2DroidManager.newDiscoveredAndroid(context, discoverListener);
     }
 
     public void connectHardcoded() {

@@ -1,7 +1,7 @@
-package org.remoteandroid.apps.ralander;
+package org.droid2droid.apps.ralander;
 
-import org.remoteandroid.control.RemoteControlActions;
-import org.remoteandroid.control.RemoteControlBinder;
+import org.droid2droid.control.RemoteControlActions;
+import org.droid2droid.control.RemoteControlBinder;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -23,7 +23,7 @@ public class KeyCaptureActivity extends Activity {
 
     private RemoteControlBinder remoteControl;
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -37,7 +37,7 @@ public class KeyCaptureActivity extends Activity {
 
     };
 
-    private BroadcastReceiver stopReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver stopReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
