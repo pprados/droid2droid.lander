@@ -3,7 +3,7 @@ package org.droid2droid.control;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.remoteandroid.control.RemoteControl;
+import org.droid2droid.control.RemoteControl;
 
 import android.app.Service;
 import android.content.Context;

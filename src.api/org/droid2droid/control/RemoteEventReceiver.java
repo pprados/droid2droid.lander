@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import org.remoteandroid.control.RemoteControl;
+import org.droid2droid.control.RemoteControl;
 
 import android.os.Handler;
 import android.os.RemoteException;
