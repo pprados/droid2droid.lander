@@ -356,9 +356,11 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
                 Canvas c = null;
                 try {
                     c = mSurfaceHolder.lockCanvas(null);
-                    synchronized (mSurfaceHolder) {
-                        if (mMode == STATE_RUNNING) updatePhysics();
-                        doDraw(c);
+                    if (c != null) {
+                        synchronized (mSurfaceHolder) {
+                            if (mMode == STATE_RUNNING) updatePhysics();
+                            doDraw(c);
+                        }
                     }
                 } finally {
                     // do this in a finally so that if an exception is thrown
