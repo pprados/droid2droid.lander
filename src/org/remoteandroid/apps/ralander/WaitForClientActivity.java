@@ -6,18 +6,21 @@ import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidDefa
 import org.remoteandroid.apps.ralander.RemoteAndroidController.RemoteAndroidListener;
 import org.remoteandroid.util.RAUtils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
+import android.graphics.Point;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 public class WaitForClientActivity extends Activity {
 
@@ -60,7 +63,8 @@ public class WaitForClientActivity extends Activity {
             alertDialog.show();
         }
 
-		@Override
+        @TargetApi(11)
+        @Override
         public void pushProgress(int progress) {
             if (progressDialog == null) {
                 alertDialog.hide();
@@ -68,8 +72,9 @@ public class WaitForClientActivity extends Activity {
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 // progress is between 0 and 10000, see AbstractRemoteAndroidImpl.pushMe(...)
                 progressDialog.setMax(10000);
-                if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
-                	progressDialog.setProgressNumberFormat(null);
+
+                if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB)
+                    progressDialog.setProgressNumberFormat(null);
                 progressDialog.setMessage("Sending APK...");
                 progressDialog.show();
             }
@@ -101,6 +106,7 @@ public class WaitForClientActivity extends Activity {
         }
     };
 
+    @TargetApi(13)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +120,24 @@ public class WaitForClientActivity extends Activity {
         qrCode = (ImageView) findViewById(R.id.qrCode);
 
         try {
-            Bitmap bitmap = RAUtils.createQRCodeScaledBitmap(this, 300);
+            // See ExposeQRCodeFragment
+            Point point = new Point();
+            Display display = getWindowManager().getDefaultDisplay();
+            // WindowManager manager = getSystemService(Context.WINDOW_SERVICE);
+            // Display display = manager.getDefaultDisplay();
+            int width;
+            int height;
+            if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB_MR2) {
+                display.getSize(point);
+                width = point.x;
+                height = point.y;
+            } else {
+                width = display.getWidth();
+                height = display.getHeight();
+            }
+
+            int size = Math.min(width, height);
+            Bitmap bitmap = RAUtils.createQRCodeScaledBitmap(this, size);
             qrCode.setImageBitmap(bitmap);
         } catch (IOException e) {
             e.printStackTrace();
